@@ -31,7 +31,7 @@
   // 作品のブックマーク数が以下の値未満の場合は表示しない
   var FAV_FILTER = 3;
   // リンクを別のタブで開くかどうか true or false
-  var LINK_BLANK = true; 
+  var IS_LINK_BLANK = true; 
 
   /** 編集可能 **/ 
 
@@ -96,9 +96,11 @@
       if (fav < FAV_FILTER) {
         $(this).remove();
       } else {
-        if (LINK_BLANK) {
-          $(this).children('a').attr('target', 'blank');
+        // blank onの場合 target属性追加
+        if (!IS_LINK_BLANK) {
+          return;
         }
+        $(this).children('a').attr('target', 'blank');
       }
     });
     var images = $('.column-search-result').children('._image-items').children('.image-item').map(function() {
@@ -159,8 +161,8 @@
     // pixiv_sk用のページネーションリンク表示
     if (mCurrentPage === 1) {
       $('.pager-container').empty().append(
-          '<a href="'+mCurrentUrl+'" style="margin-right:15px;">&lt;&lt;</a>'+
-          '<a href="'+mCurrentUrl+'&p='+(mCurrentPage+PAGE_MULTIPLE)+'">&gt;</a>'
+        '<a href="'+mCurrentUrl+'" style="margin-right:15px;">&lt;&lt;</a>'+
+        '<a href="'+mCurrentUrl+'&p='+(mCurrentPage+PAGE_MULTIPLE)+'">&gt;</a>'
       ); 
     } else {
       $('.pager-container').empty().append(
