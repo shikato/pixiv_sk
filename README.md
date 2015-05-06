@@ -9,7 +9,7 @@ pixivの検索結果をソートしたりフィルタリングしたり1ペー�
 ## Install
 [greasyfork.org](https://greasyfork.org/ja/scripts/2247-pixivsortfilteradditem)からインストールしてください。 
 
-※ユーザースクリプトをChromeで使うには[Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ja)が必要です。
+※ユーザースクリプトをChromeで使うには[Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ja)が必要です。  
 ※Chromeでしか動作確認してません。
 
 ## How to use
