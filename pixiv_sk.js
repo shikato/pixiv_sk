@@ -44,6 +44,8 @@
   var mCurrentPage = null;
   var mGetPageLimit = null; 
 
+
+  // 次のページの作品を取得する
   var getNextPage = function () { 
     var url = mCurrentUrl;
 
@@ -88,7 +90,9 @@
       getNextPage(mCurrentPage);
     }, 1000);
   };
-     
+   
+
+  // 表示されている作品をフィルタリングしてソートする
   var filterAndSort = function () {
     // FAV_FILTER未満の作品をremove
     $('.column-search-result').children('._image-items').children('.image-item').each(function() {
