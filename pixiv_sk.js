@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name           pixiv_sk
 // @namespace      http://alexam.hateblo.jp/
+// @author         shikato
 // @description    pixivの検索結果をソートしたりフィルタリングしたり1ページに表示する数を増やしたりできます。
-// @version        1.0.0
+// @version        1.0.1
 // @include        http://www.pixiv.net/search.php*
 // @include        http://www.pixiv.net/tags.php*
 // ==/UserScript==
@@ -22,7 +23,7 @@
   head.appendChild(jquery);
 })(document, function ($) {
 
-  /** 編集可能 **/
+  /** 値の編集が可能 ここから **/
   
   // 1ページに作品を通常の何倍の数表示するか
   // ex) 1なら通常通り
@@ -33,7 +34,9 @@
   // リンクを別のタブで開くかどうか true or false
   var IS_LINK_BLANK = true; 
 
-  /** 編集可能 **/ 
+  /** 値の編集が可能 ここまで **/ 
+
+  var LOADING_IMG = 'https://raw.githubusercontent.com/shikato/pixiv_sk/master/loading.gif';
 
   if (PAGE_MULTIPLE < 1 || FAV_FILTER < 0) {
     return;
@@ -159,7 +162,7 @@
     $('.column-search-result').children('ul').hide();
     $('.column-search-result').prepend(
       '<div id="loading" style="width:50px;margin-left:auto;margin-right:auto;">'+
-      '<img src="http://semifo.pa.land.to/loading.gif" /></div>'
+      '<img src="' + LOADING_IMG + '" /></div>'
     );
 
     // pixiv_sk用のページネーションリンク表示
