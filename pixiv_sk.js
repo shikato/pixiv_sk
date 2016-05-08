@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name           pixiv_sk
-// @namespace      https://github.com/shikato/pixiv_sk
+// @namespace      http://alexam.hateblo.jp/
+// @author         shikato
 // @description    pixivの検索結果をソートしたりフィルタリングしたり1ページに表示する数を増やしたりできます。
 // @version        1.0.1
 // @include        http://www.pixiv.net/search.php*
