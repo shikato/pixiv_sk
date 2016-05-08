@@ -23,7 +23,7 @@
   head.appendChild(jquery);
 })(document, function ($) {
 
-  /** 値の編集可能ここから **/
+  /** 値の編集が可能 ここから **/
   
   // 1ページに作品を通常の何倍の数表示するか
   // ex) 1なら通常通り
@@ -34,7 +34,7 @@
   // リンクを別のタブで開くかどうか true or false
   var IS_LINK_BLANK = true; 
 
-  /** 値の編集可能ここまで **/ 
+  /** 値の編集が可能 ここまで **/ 
 
   var LOADING_IMG = 'https://raw.githubusercontent.com/shikato/pixiv_sk/master/loading.gif';
 
