@@ -11,7 +11,10 @@ pixivの検索結果をソートしたりフィルタリングしたりページ
 [greasyfork.org](https://greasyfork.org/ja/scripts/2247-pixiv-sk)からインストールしてください。 
 
 ※ユーザースクリプトをChromeで使うには[Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ja)が必要です。  
-※Chromeでしか動作確認してません。
+※Chromeでしか動作確認してません。  
+※ pixiv_skを有効にすると、それぞれのサムネイル画像右下にあるメニュー（「ミュート設定」や「報告」）が表示されなくなります。 「ミュート設定」や「報告」をしたい場合はpixiv_skをoffにしてください。  
+※ 他にも↑のような現象が発生するかもしれませんが、現状確認できているのは↑のみです。
+
 
 ## Option
 コードを直接編集することにより、スクリプトの挙動を変更することができます(31行目あたり)。   
