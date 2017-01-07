@@ -3,7 +3,7 @@
 // @namespace      http://alexam.hateblo.jp/
 // @author         shikato
 // @description    pixivの検索結果をソートしたりフィルタリングしたり1ページに表示する数を増やしたりできます。
-// @version        1.0.1
+// @version        1.1.0
 // @include        http://www.pixiv.net/search.php*
 // @include        http://www.pixiv.net/tags.php*
 // ==/UserScript==
@@ -23,101 +23,71 @@
   head.appendChild(jquery);
 })(document, function ($) {
 
-  /** 値の編集が可能 ここから **/
+  /** 設定値 ここから **/
   
-  // 1ページに作品を通常の何倍の数表示するか
+  // 1ページに何ページ分の作品を表示するか
   // ex) 1なら通常通り
-  //     2にすると2ページ分になる（表示にかかる時間は+1秒）
-  var PAGE_MULTIPLE = 3;
+  //     2にすると2ページ分表示
+  var GETTING_PAGE_COUNT = 3;
   // 作品のブックマーク数が以下の値未満の場合は表示しない
   var FAV_FILTER = 3;
-  // リンクを別のタブで開くかどうか true or false
+  // リンクを別のタブで開くかどうか true / false
   var IS_LINK_BLANK = true; 
 
-  /** 値の編集が可能 ここまで **/ 
+  /** 設定値 ここまで **/ 
 
   var LOADING_IMG = 'https://raw.githubusercontent.com/shikato/pixiv_sk/master/loading.gif';
 
-  if (PAGE_MULTIPLE < 1 || FAV_FILTER < 0) {
-    return;
-  } 
+  if (GETTING_PAGE_COUNT < 1 || FAV_FILTER < 0) return;
 
-  var mCurrentGotPage = null;
+  var mCurrentGettingPageCount = null;
   var mCurrentUrl = null;
   var mCurrentPage = null;
-  var mGetPageLimit = null; 
+  var mWorks = [];
 
-
-  // 次のページの作品を取得する
-  var getNextPage = function () { 
+  // mCurrentPageの作品を取得する
+  var getWorks = function (onloadCallback) { 
     var url = mCurrentUrl;
 
     if (mCurrentPage === 1) {
-      mCurrentPage++;    
       url += ('&p='+mCurrentPage); 
     } else {
-      mCurrentPage++;    
       url = mCurrentUrl.replace(/p=\d+/, 'p='+mCurrentPage); 
-    }
-
-    if (mCurrentPage > mGetPageLimit) {
-      return;
-    }
-
+    } 
     mCurrentUrl = url; 
 
     var req = new XMLHttpRequest();
     req.open('GET', mCurrentUrl, true);
-    req.onload = function (event) { 
-      $(req.responseText).find('.column-search-result').children('._image-items').children('.image-item').each(function() {
-        $('.column-search-result').children('ul').append($(this));
-      });
-      mCurrentGotPage++;
-      // PAGE_MULTIPLEで指定した分だけ取得したらソートして表示
-      if (mCurrentGotPage === (PAGE_MULTIPLE-1)) {
-        $('#loading').remove();
-        var sortedImages = filterAndSort();
-        $('.column-search-result').children('ul').empty().append(sortedImages).show(); 
-      }
+    req.onload = function (event) {
+      onloadCallback(req); 
       req = null;
     };
     req.onerror = function (event) {
-      alert('画像の取得に失敗しました。');
+      alert('作品の取得に失敗しました。');
       req = null;
     };
 
-    req.send(null);
-
-    // 1秒後にリクエスト
-    setTimeout(function () {
-      getNextPage(mCurrentPage);
-    }, 1000);
+    req.send(null); 
   };
-   
-
-  // 表示されている作品をフィルタリングしてソートする
+  
+  // mWorksをフィルタリングしてソートして文字列としてHTMLを返す
   var filterAndSort = function () {
-    // FAV_FILTER未満の作品をremove
-    $('.column-search-result').children('._image-items').children('.image-item').each(function() {
-      var fav = $(this).children('ul').children('li:first').children('a').text();
+    // FAV_FILTER未満の作品をremove 
+    mWorks.forEach(function (work, i) { 
+      var fav = work.children('ul').children('li:first').children('a').text();
       if (fav < FAV_FILTER) {
-        $(this).remove();
+        mWorks.splice(i, 1);
       } else {
         // blank onの場合 target属性追加
-        if (!IS_LINK_BLANK) {
-          return;
-        }
-        $(this).children('a').attr('target', 'blank');
+        if (!IS_LINK_BLANK) return;
+        work.children('a').attr('target', 'blank');
       }
     });
-    var images = $('.column-search-result').children('._image-items').children('.image-item').map(function() {
-      return $(this);
-    });
 
-    // ソート
-    images.sort(function (a, b) {
-      var favA = $(a).children('ul').children('li:first').children('a').text();
-      var favB = $(b).children('ul').children('li:first').children('a').text();
+    // ソート 
+    mWorks.sort(function (a, b) {
+      var favA = a.children('ul').children('li:first').children('a').text();
+      var favB = b.children('ul').children('li:first').children('a').text();
       if (favA === '') {
         favA = 0; 
       } else {
@@ -137,51 +107,70 @@
       return 0;
     }); 
 
-    var results = '';
-    for (var i = 0; i < images.length; i++) { 
-      results += $('<div>').append(images[i]).html();                    
+    var results = ''; 
+    for (var i = 0; i < mWorks.length; i++) { 
+      results += $('<div>').append(mWorks[i]).html();                    
     }
+
     return results;
-  } 
+  }; 
 
 
-  mCurrentGotPage = 0;
+  mCurrentGettingPageCount = 0;
   mCurrentUrl = location.href;
-  mCurrentPage = mCurrentUrl.match(/p=(\d+)/);
+  mCurrentPage = mCurrentUrl.match(/p=(\d+)/); 
 
   if (mCurrentPage !== null) {
     mCurrentPage = parseInt(mCurrentPage[1]);
-    mGetPageLimit = (PAGE_MULTIPLE - 1) + mCurrentPage;
   } else {
     mCurrentPage = 1;
-    mGetPageLimit = PAGE_MULTIPLE;
   }
 
-  if (PAGE_MULTIPLE > 1) {
+  if (GETTING_PAGE_COUNT > 1) {
     // load時のスピナー表示
-    $('.column-search-result').children('ul').hide();
+    $('.column-search-result').children('ul').hide(); 
     $('.column-search-result').prepend(
-      '<div id="loading" style="width:50px;margin-left:auto;margin-right:auto;">'+
-      '<img src="' + LOADING_IMG + '" /></div>'
+      '<div id="loading" style="width:50px;margin-left:auto;margin-right:auto;">'
+       + '<img src="' + LOADING_IMG + '" /></div>'
     );
 
     // pixiv_sk用のページネーションリンク表示
     if (mCurrentPage === 1) {
       $('.pager-container').empty().append(
-        '<a href="'+mCurrentUrl+'" style="margin-right:15px;">&lt;&lt;</a>'+
-        '<a href="'+mCurrentUrl+'&p='+(mCurrentPage+PAGE_MULTIPLE)+'">&gt;</a>'
+        '<a href="' + mCurrentUrl + '" style="margin-right:15px;">&lt;&lt;</a>'
+         + '<a href="' + mCurrentUrl + '&p=' + (mCurrentPage+GETTING_PAGE_COUNT) +'">&gt;</a>'
       ); 
     } else {
       $('.pager-container').empty().append(
-        '<a href="'+mCurrentUrl.replace(/&p=\d+/, '')+'" style="margin-right:15px;">&lt;&lt;</a>'+
-        '<a href="'+mCurrentUrl.replace(/p=\d+/, 'p='+(mCurrentPage-PAGE_MULTIPLE))+'" style="margin-right:10px;">&lt;</a>'+
-        '<a href="'+mCurrentUrl.replace(/p=\d+/, 'p='+(mCurrentPage+PAGE_MULTIPLE))+'" style="margin-right:10px;">&gt;</a>'
+        '<a href="'+mCurrentUrl.replace(/&p=\d+/, '') + '" style="margin-right:15px;">&lt;&lt;</a>'
+         + '<a href="'+mCurrentUrl.replace(/p=\d+/, 'p=' + (mCurrentPage - GETTING_PAGE_COUNT)) + '" style="margin-right:10px;">&lt;</a>'
+         + '<a href="'+mCurrentUrl.replace(/p=\d+/, 'p=' + (mCurrentPage + GETTING_PAGE_COUNT)) + '" style="margin-right:10px;">&gt;</a>'
       ); 
     }
-    // PAGE_MULTIPLEで指定したページ分取得する
-    getNextPage();
+
+    var onloadCallback = function (req) { 
+      $(req.responseText).find('.column-search-result').children('._image-items').children('.image-item').each(function() {
+        var thumb = $(this).children('.work').children('._layout-thumbnail').children('._thumbnail');
+        thumb.attr('src', thumb.attr('data-src')); 
+        mWorks.push($(this));
+      }); 
+
+      mCurrentPage++; 
+      mCurrentGettingPageCount++; 
+      // GETTING_PAGE_COUNTで指定した分だけ作品を取得したらソートして表示
+      if (mCurrentGettingPageCount === GETTING_PAGE_COUNT) {
+        $('#loading').remove();
+        var sortedImages = filterAndSort();
+        $('.column-search-result').children('ul').empty().append(sortedImages).show(); 
+      } else { 
+        getWorks(onloadCallback);
+      } 
+    };
+    
+    getWorks(onloadCallback);
   } else {
-    var sortedImages = filterAndSort();
+    // filterAndSortだけ実行して表示
+    var sortedImages = filterAndSort(); 
     $('.column-search-result').children('ul').empty().append(sortedImages);
   }
 
