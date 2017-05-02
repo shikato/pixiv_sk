@@ -3,9 +3,9 @@
 // @namespace      http://alexam.hateblo.jp/
 // @author         shikato
 // @description    pixivの検索結果をソートしたりフィルタリングしたり1ページに表示する数を増やしたりできます。
-// @version        1.1.0
-// @include        http://www.pixiv.net/search.php*
-// @include        http://www.pixiv.net/tags.php*
+// @version        1.1.1
+// @include        https://www.pixiv.net/search.php*
+// @include        https://www.pixiv.net/tags.php*
 // ==/UserScript==
 
 (function (doc, func) {
@@ -13,7 +13,7 @@
   var head = doc.getElementsByTagName('head')[0]; 
 
   var jquery = doc.createElement('script'); 
-  jquery.setAttribute('src', 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
+  jquery.setAttribute('src', 'https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js');
   jquery.addEventListener('load', function() {
     var myScript = doc.createElement('script');
     myScript.textContent = 'jQuery.noConflict();(' + func.toString() + ')(jQuery);';
@@ -70,7 +70,7 @@
     req.send(null); 
   };
   
-  // mWorksをフィルタリングしてソートして文字列としてHTMLを返す
+  // mWorksをフィルタリングしてソートしてHTML(文字列)を返す
   var filterAndSort = function () {
     // FAV_FILTER未満の作品をremove 
     mWorks.forEach(function (work, i) { 
