@@ -3,7 +3,7 @@
 // @namespace      http://alexam.hateblo.jp/
 // @author         shikato
 // @description    pixivの検索結果をフィルタリングしソートします。
-// @version        1.1.1
+// @version        2.0.0
 // @include        https://www.pixiv.net/search.php*
 // @include        https://www.pixiv.net/tags.php*
 // @require https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js
@@ -20,10 +20,6 @@ var IS_LINK_BLANK = true;
 /** 設定値 ここまで **/ 
 
 
-if (FAV_FILTER < 0) {
-  return;
-}
-
 var getFav = function (target) { 
   var favText = target.children('figure').children('figcaption').children('ul').children('li:lt(3)').children('ul').children('li').children('a').text(); 
   if (favText === '') {
@@ -33,15 +29,15 @@ var getFav = function (target) {
   }
 };
 
-// worksをフィルタリングしてソートしてHTML(文字列)を返す
+// 作品をフィルタリングしてソートしてHTML(文字列)を返す
 var filterAndSort = function () {
   var works = []; 
 
-  // FAV_FILTER未満の作品をremove
+  // FAV_FILTERでフィルタリング
   $('._2xrGgcY').children('._7IVJuWZ').each(function() { 
     var fav = getFav($(this)); 
     if (fav >= FAV_FILTER) { 
-      // blank onの場合 target属性追加
+      // blank機能がonの場合 target属性追加
       if (!IS_LINK_BLANK) {
         return;
       }
@@ -64,9 +60,9 @@ var filterAndSort = function () {
   }); 
 
   var results = ''; 
-  for (var i = 0; i < works.length; i++) { 
-    results += $('<div>').append(works[i]).html();                    
-  }
+  works.forEach(function (work) {
+    results += $('<div>').append(work).html();
+  }); 
 
   return results;
 }; 
@@ -76,6 +72,5 @@ var pisivSkInterval = setInterval(function () {
     var sortedWorks = filterAndSort(); 
     $('._2xrGgcY').empty().append(sortedWorks).show(); 
     clearInterval(pisivSkInterval); 
-    return;
   }
 }, 5); 
