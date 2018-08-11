@@ -37,7 +37,7 @@ var filterAndSort = function () {
   $('._1BUAfFH').children('._25taFA4').each(function () { 
     var fav = getFav($(this)); 
     if (fav >= FAV_FILTER) { 
-      // If target blank setting enables, target blank attribute is added.
+      // If IS_LINK_BLANK is true, target blank attribute is added.
       if (!IS_LINK_BLANK) {
         return;
       }
@@ -84,5 +84,6 @@ var pisivSkInterval = setInterval(function () {
       var sortedWorks = filterAndSort(); 
       $('._1BUAfFH').empty().append(sortedWorks).show(); 
       clearInterval(pisivSkInterval); 
-    }  }
+    }  
+  }
 }, 100); 
