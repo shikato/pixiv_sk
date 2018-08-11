@@ -2,7 +2,7 @@
 
 shikatoがpixivを快適に使うためのユーザースクリプトです。   
 pixivの検索結果をフィルタリングしてソートします。    
-（2012年くらいから使ってるので、ちゃんとGithubで管理することにしました）
+（2012年くらいから使っているので、Githubで管理することにしました）
 
 ## Demo
 ![gif](./sample.gif)
@@ -12,8 +12,6 @@ pixivの検索結果をフィルタリングしてソートします。
 
 ※ユーザースクリプトをChromeで使うには[Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ja)が必要です。  
 ※Chromeでしか動作確認してません。  
-※ pixiv_skを有効にすると、それぞれのサムネイル画像右下にあるメニュー（「ミュート設定」や「報告」）が表示されなくなります。 「ミュート設定」や「報告」をしたい場合はpixiv_skをoffにしてください。  
-※ 他にも↑のような現象が発生するかもしれませんが、現状確認できているのは↑のみです。
 
 ## Usage
 **2018-08-11 追記**   
