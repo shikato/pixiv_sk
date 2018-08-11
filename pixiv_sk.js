@@ -3,7 +3,7 @@
 // @namespace      http://alexam.hateblo.jp/
 // @author         shikato
 // @description    pixivの検索結果をフィルタリングしソートします。
-// @version        2.0.0
+// @version        2.1.0
 // @include        https://www.pixiv.net/search.php*
 // @include        https://www.pixiv.net/tags.php*
 // @require https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js
@@ -21,7 +21,7 @@ var IS_LINK_BLANK = true;
 
 
 var getFav = function (target) { 
-  var favText = target.children('figure').children('figcaption').children('ul').children('li:lt(3)').children('ul').children('li').children('a').text(); 
+  var favText = target.children('figure').children('figcaption').children('ul').children('li:nth-child(3)').children('ul').children('li').children('a').text(); 
   if (favText === '') {
     return 0;
   } else { 
@@ -29,24 +29,24 @@ var getFav = function (target) {
   }
 };
 
-// 作品をフィルタリングしてソートしてHTML(文字列)を返す
+// filtering and sorting
 var filterAndSort = function () {
   var works = []; 
 
-  // FAV_FILTERでフィルタリング
-  $('._2xrGgcY').children('._7IVJuWZ').each(function() { 
+  // fav filtering
+  $('._1BUAfFH').children('._25taFA4').each(function () { 
     var fav = getFav($(this)); 
     if (fav >= FAV_FILTER) { 
-      // blank機能がonの場合 target属性追加
+      // If target blank setting enables, target blank attribute is added.
       if (!IS_LINK_BLANK) {
         return;
       }
-      $(this).children('figure').children('div').children('a').attr('target', 'blank').attr('rel', '');
+      $(this).children('figure').children('._3NnoQkv').children('a').attr('target', 'blank').attr('rel', '');
       works.push($(this));
     }
   });
 
-  // ソート 
+  // sorting
   works.sort(function (a, b) {
     var favA = getFav(a); 
     var favB = getFav(b); 
@@ -59,6 +59,7 @@ var filterAndSort = function () {
     return 0;
   }); 
 
+  // create result(html characters)
   var results = ''; 
   works.forEach(function (work) {
     results += $('<div>').append(work).html();
@@ -67,10 +68,21 @@ var filterAndSort = function () {
   return results;
 }; 
 
+var isFinishedLazyloaded = function () { 
+  var isFinished = true;
+  $('._1BUAfFH').children('._25taFA4').each(function () { 
+    if ($(this).children('figure').children('._3NnoQkv').children('a').children('._309ad3C').css('background-image') === 'none') {
+      isFinished = false; 
+    }
+  });
+  return isFinished;
+};
+
 var pisivSkInterval = setInterval(function () {
-  if ($('._2xrGgcY').length) { 
-    var sortedWorks = filterAndSort(); 
-    $('._2xrGgcY').empty().append(sortedWorks).show(); 
-    clearInterval(pisivSkInterval); 
-  }
-}, 5); 
+  if ($('._1BUAfFH').length) {
+    if (isFinishedLazyloaded()) { 
+      var sortedWorks = filterAndSort(); 
+      $('._1BUAfFH').empty().append(sortedWorks).show(); 
+      clearInterval(pisivSkInterval); 
+    }  }
+}, 100); 
