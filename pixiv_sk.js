@@ -3,7 +3,7 @@
 // @namespace      http://alexam.hateblo.jp/
 // @author         shikato
 // @description    pixivの検索結果をフィルタリングしソートします。
-// @version        2.1.0
+// @version        2.1.1
 // @include        https://www.pixiv.net/search.php*
 // @include        https://www.pixiv.net/tags.php*
 // @require https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js
@@ -34,14 +34,14 @@ var filterAndSort = function () {
   var works = []; 
 
   // fav filtering
-  $('._1BUAfFH').children('._25taFA4').each(function () { 
+  $('.x7wiBV0').children('.JoCpVnw').each(function () { 
     var fav = getFav($(this)); 
     if (fav >= FAV_FILTER) { 
       // If IS_LINK_BLANK is true, target blank attribute is added.
       if (!IS_LINK_BLANK) {
         return;
       }
-      $(this).children('figure').children('._3NnoQkv').children('a').attr('target', 'blank').attr('rel', '');
+      $(this).children('figure').children('._3IpHIQ_').children('a').attr('target', 'blank').attr('rel', '');
       works.push($(this));
     }
   });
@@ -70,8 +70,8 @@ var filterAndSort = function () {
 
 var isFinishedLazyloaded = function () { 
   var isFinished = true;
-  $('._1BUAfFH').children('._25taFA4').each(function () { 
-    if ($(this).children('figure').children('._3NnoQkv').children('a').children('._309ad3C').css('background-image') === 'none') {
+  $('.x7wiBV0').children('.JoCpVnw').each(function () { 
+    if ($(this).children('figure').children('._3IpHIQ_').children('a').children('._1hsIS11').css('background-image') === 'none') {
       isFinished = false; 
     }
   });
@@ -79,10 +79,10 @@ var isFinishedLazyloaded = function () {
 };
 
 var pisivSkInterval = setInterval(function () {
-  if ($('._1BUAfFH').length) {
+  if ($('.x7wiBV0').length) {
     if (isFinishedLazyloaded()) { 
       var sortedWorks = filterAndSort(); 
-      $('._1BUAfFH').empty().append(sortedWorks).show(); 
+      $('.x7wiBV0').empty().append(sortedWorks).show(); 
       clearInterval(pisivSkInterval); 
     }  
   }
